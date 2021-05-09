@@ -1,0 +1,57 @@
+(function(modules){
+
+    var installedModules = {};
+    var cacheMap = {};
+    var depChunks = {
+        /* dep chunks */
+    }
+
+    var require = function require(id) {
+
+        if(installedModules[id]) return installedModules[id].exports;
+
+        const module = {
+            exports: {},
+            loaded:false,
+        }
+
+        const factory = modules[id];
+        factory.call(module.exports,module,module.exports,require)
+        module.loaded = true;
+
+        return module.exports;
+
+    }
+
+    require.ensure = function(id) {
+        return new Promise((resolve,reject)=>{
+            const script = document.createElement('script');
+            const parent = document.getElementsByTagName('script')[document.getElementsByTagName('script').length-1].parentElement;
+            script.src = location.pathname.substring(0,location.pathname.lastIndexOf('/'))+"/"+depChunks[id];
+            script.async = true;
+            script.type = "text/javascript";
+            parent.append(script);
+            cacheMap[depChunks[id]] = resolve;
+        })
+    }
+
+    this.__asyncRequire = function(chunkId,callback){
+        if(cacheMap[depChunks[chunkId]]) {
+            var resolve = cacheMap[depChunks[chunkId]];
+            const module = {
+                exports: {},
+                loaded: false,
+            }
+            callback.call(module.exports,module,module.exports,require);
+            module.loaded = true;
+
+            const result = module.exports;
+            resolve(result);
+        }
+
+    }
+
+    require('/* entry */')
+})(
+    /* bundle modules */
+)

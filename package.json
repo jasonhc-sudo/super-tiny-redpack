@@ -1,0 +1,14 @@
+{
+  "name": "jhc-redpack",
+  "version": "1.0.0",
+  "description": "-  bundle commonjs module\r -  dynamic require/require.ensure",
+  "main": "redpack.config.js",
+  "bin": {
+    "jhc-redpack": "bin/pack.js"
+  },
+  "scripts": {
+    "redpack": "node bin/pack.js"
+  },
+  "author": "jasonhc",
+  "license": "ISC"
+}
